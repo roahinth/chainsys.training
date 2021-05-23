@@ -1,0 +1,67 @@
+SELECT * FROM DOCTORS_HMS;
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+SET SERVEROUTPUT ON;
+
+
+CREATE OR REPLACE PACKAGE DOC_APP_PG
+
+AS
+
+PROCEDURE DOC_APP_PR(N IN DOCTORS_HMS.D_NAME%TYPE,J IN DOCTORS_HMS.D_DEPT%TYPE,S IN DOCTORS_HMS.D_FEES%TYPE);
+
+
+END DOC_APP_PG;
+
+                                  --------------------------------------------------------------------------
+
+CREATE OR REPLACE PACKAGE BODY DOC_APP_PG
+
+AS
+
+PROCEDURE DOC_APP_PR(N IN DOCTORS_HMS.D_NAME%TYPE,J IN DOCTORS_HMS.D_DEPT%TYPE,S IN DOCTORS_HMS.D_FEES%TYPE)
+IS 
+V_COUNT NUMBER :=0;
+
+BEGIN
+
+FOR D IN (SELECT DISTINCT D_DEPT FROM DOCTORS_HMS)  LOOP
+
+    IF D.D_DEPT=J THEN
+    V_COUNT := V_COUNT+1;
+    END IF;
+
+END LOOP;
+
+    IF V_COUNT>0 THEN 
+    DBMS_OUTPUT.PUT_LINE('SORRY, WE ARE ALREADY HAVING DOCTOR IN THAT DEPARTMENT');
+
+
+    ELSE 
+    INSERT INTO DOCTORS_HMS(D_ID,D_NAME,D_DEPT,D_FEES) VALUES    ('D'||DOCTORS_HMS_SEQ.NEXTVAL,N,J,S);
+
+     DBMS_OUTPUT.PUT_LINE('YOU ARE APPOINTED');
+    END IF;
+
+END DOC_APP_PR;
+END DOC_APP_PG;
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+EXEC DOC_APP_PG.DOC_APP_PR('&NAME','&DEPARTMENT',&FEES);
+
+-------------------------------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE TRIGGER DOC_APP_TRG
+
+AFTER INSERT ON DOCTORS_HMS FOR EACH ROW ENABLE
+BEGIN 
+
+DBMS_OUTPUT.PUT_LINE('CONGRATS');
+
+END DOC_APP_TGR;
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
