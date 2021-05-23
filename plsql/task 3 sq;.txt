@@ -1,0 +1,70 @@
+SUB QUERIES
+
+
+--  Find all employees who do not locate at the location 1700
+
+SELECT * FROM EMPLOYEES_2591 WHERE DEPARTMENT_ID=ANY(SELECT DEPARTMENT_ID FROM departments_591 WHERE LOCATION_ID!=1700);
+
+
+-- find the employees who have the highest salary
+
+SELECT * FROM EMPLOYEES_2591 WHERE SALARY=(SELECT MAX(SALARY) FROM EMPLOYEES_2591);
+
+
+-- find all employees who salaries are greater than the average salary of all employees
+
+SELECT * FROM EMPLOYEES_2591 WHERE SALARY>(SELECT AVG(SALARY) FROM EMPLOYEES_2591);
+
+
+
+
+-- find all departments which have at least one employee with the salary is greater than 10,000:
+
+SELECT * FROM departments_591 WHERE DEPARTMENT_ID=ANY(SELECT DEPARTMENT_ID FROM EMPLOYEES_2591 WHERE SALARY>10000);
+
+
+
+
+-- find all employees whose salaries are greater than the lowest salary of every department:
+
+SELECT * FROM EMPLOYEES_2591 WHERE SALARY>ALL(SELECT MIN(SALARY) FROM EMPLOYEES_2591);
+
+
+
+
+-- find the salaries of all employees, their average salary, and the difference between the salary of each employee and the average salary.
+
+SELECT SALARY,AVG(SALARY) FROM EMPLOYEES_2591 GROUP BY SALARY;
+
+-- List the Employees whose name starts with “ar”.
+
+SELECT * FROM EMPLOYEES_2591 WHERE FIRST_NAME LIKE 'ar%';
+
+
+
+-- List the Employees whose name starts with P,B,R characters.
+
+SELECT * FROM EMPLOYEES_2591 WHERE FIRST_NAME LIKE 'P%' OR FIRST_NAME LIKE 'B%'OR  FIRST_NAME LIKE 'R%';
+
+
+
+-- Find Query to get information of Employee where Employee is not assigned to the department
+
+SELECT * FROM EMPLOYEES_2591 WHERE DEPARTMENT_ID=NULL;
+
+
+
+-- How to fetch all the records from Employee whose joining year is 2018?
+
+SELECT * FROM EMPLOYEES_2591 WHERE TO_CHAR(HIRE_DATE,'YYYY')=2018;
+
+
+--  How Do you find all Employees with its managers?(Consider there is manager id also in Employee table)
+
+SELECT * FROM EMPLOYEES_2591 A JOIN EMPLOYEES_2591 B ON A.MANAGER_ID=B.MANAGER_ID;
+
+
+-- Display 3 to 7 records from Employee table
+
+SELECT * FROM EMPLOYEES_2591;
+

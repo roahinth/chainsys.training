@@ -1,0 +1,53 @@
+BOOKS
+
+SELECT * FROM  XX_PUB_25983;
+SELECT * FROM  XX_SUB_25983;
+SELECT * FROM  XX_AUT_25983;
+SELECT * FROM  XX_TIT_259839;
+SELECT * FROM  XX_TA_259839;
+
+
+-- display the number of books published in year 2004
+
+SELECT COUNT(PUBID) FROM XX_TIT_259839 WHERE TO_CHAR(PUBDATE,'YYYY')=2004;
+
+
+
+--Display Title ID and number of authors of the title
+
+SELECT TITLEID,COUNT(AUID) FROM XX_TA_259839 GROUP BY TITLEID;
+
+
+
+--Display how many titles author 103 wrote as the lead author
+
+SELECT COUNT(TITLEID) FROM XX_TA_259839 WHERE AUID=103;
+
+
+--Display the subjects for which we have the average price in the range 400 to 500 
+
+SELECT SNAME FROM XX_SUB_25983 WHERE SUBID=ANY(SELECT SUBID FROM XX_TIT_259839 WHERE PRICE BETWEEN 400 AND 500);
+
+
+--Display the publisher who published more than OR EQUAL 1 book on JAVA
+
+SELECT * FROM XX_PUB_25983 WHERE PUBID=ANY(SELECT PUBID FROM XX_TIT_259839 WHERE SUBID='JAVA');
+
+
+
+
+
+
+
+--Display the author who has written the costliest book. 
+
+SELECT ANAME FROM XX_AUT_25983 WHERE AUID=ANY(SELECT AUID FROM XX_TA_259839 WHERE TITLEID=ANY(SELECT TITLEID FROM XX_TIT_259839 WHERE PRICE=(SELECT MAX(PRICE) FROM XX_TIT_259839))); 
+
+
+
+
+--Display author and number of books by the author from publisher WROX
+
+SELECT A.ANAME,COUNT(C.PUBID) FROM XX_AUT_25983 GROUP BY ANAME A JOIN XX_TA_259839 B ON A.AUID=B.AUID JOIN XX_TIT_259839 C ON B.TITLEID=C.TITLEID;
+
+
